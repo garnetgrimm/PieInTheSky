@@ -17,10 +17,11 @@ def login(request):
             # process the data in form.cleaned_data as required
             # ...
             # redirect to a new URL:
-			return HttpResponseRedirect('/thanks/')
+			return render("all good")
 	    # if a GET (or any other method) we'll create a blank form
 		else:
 			form = NameForm()
+			return render("all good")
 	return render(request, 'name.html', {'form': form})
 
 def db(request):
