@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import Greeting
 from.forms import LoginForm
@@ -7,7 +8,8 @@ from.forms import LoginForm
 # Create your views here.
 def index(request):
 	return render(request, 'index.html')
-
+	
+@csrf_exempt
 def login(request):
 	if request.method == 'POST':
 		# create a form instance and populate it with data from the request:
@@ -17,11 +19,11 @@ def login(request):
             # process the data in form.cleaned_data as required
             # ...
             # redirect to a new URL:
-			return render("all good")
+			return HttpResponse('Hello world')
 	    # if a GET (or any other method) we'll create a blank form
 		else:
 			form = NameForm()
-			return render("all good")
+			return HttpResponse('Hello world')
 	return render(request, 'name.html', {'form': form})
 
 def db(request):
