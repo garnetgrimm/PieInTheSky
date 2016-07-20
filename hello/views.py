@@ -20,7 +20,8 @@ def login(request):
             # process the data in form.cleaned_data as required
             # ...
             # redirect to a new URL:
-			return HttpResponse('Hello world')
+			String username = form.username
+			return HttpResponse('Hello ' + username)
 	    # if a GET (or any other method) we'll create a blank form
 		else:
 			form = LoginForm()
