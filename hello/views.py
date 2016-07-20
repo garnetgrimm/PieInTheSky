@@ -9,7 +9,6 @@ from.forms import LoginForm
 def index(request):
 	return render(request, 'index.html')
 	
-@csrf_exempt
 def login(request):
 	if request.method == 'POST':
 		# create a form instance and populate it with data from the request:
