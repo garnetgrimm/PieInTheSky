@@ -22,7 +22,7 @@ def login(request):
 			return HttpResponse('Hello world')
 	    # if a GET (or any other method) we'll create a blank form
 		else:
-			form = NameForm()
+			form = LoginForm()
 			return HttpResponse('Hello world')
 	return render(request, 'name.html', {'form': form})
 
