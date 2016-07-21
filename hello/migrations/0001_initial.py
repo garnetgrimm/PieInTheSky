@@ -20,4 +20,12 @@ class Migration(migrations.Migration):
                 ('when', models.DateTimeField(auto_now_add=True, verbose_name=b'date created')),
             ],
         ),
+		
+		migrations.CreateModel(
+			name='Login',
+			fields=[
+				('username', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='USERNAME')),
+				('password', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='PASSWORD')),
+			],
+		),
     ]
