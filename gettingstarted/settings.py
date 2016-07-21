@@ -10,7 +10,6 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
 import os
-import dj_database_url
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -76,7 +75,17 @@ WSGI_APPLICATION = 'gettingstarted.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-DATABASES['default'] = dj_database_url.config(conn_max_age=600)
+import dj_database_url
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', 
+        'NAME': 'your_heroku_db_name',                     
+        'USER': 'vqtxqhcbhhszge',
+        'PASSWORD': '1saMeXzunxaJZt55XT2xPV-CEj',
+        'HOST': 'ec2-54-83-22-233.compute-1.amazonaws.com', # Or something like this
+        'PORT': '5432',                     
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
