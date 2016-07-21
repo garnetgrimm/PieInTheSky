@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt, requires_csrf_token
 
-from .models import Greeting
+from .models import Greeting, LoginInfo
 from.forms import LoginForm
 
 # Create your views here.
@@ -20,7 +20,14 @@ def login(request):
             # process the data in form.cleaned_data as required
             # ...
             # redirect to a new URL:
-			username = form.cleaned_data['username']
+			newUsername = form.cleaned_data['username']
+			newPassword = form.cleaned_data['password']
+			
+			info = LoginInfo(username=newUsername, password=newPassword)
+			info.save()
+			
+			username.save()
+			
 			return HttpResponse('Hello ' + username)
 	    # if a GET (or any other method) we'll create a blank form
 		else:
