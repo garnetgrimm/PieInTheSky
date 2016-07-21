@@ -23,7 +23,9 @@ def login(request):
 			newUsername = form.cleaned_data['username']
 			newPassword = form.cleaned_data['password']
 			
-			info = LoginInfo(username=newUsername, password=newPassword)
+			info = LoginInfo()
+			info.username=newUsername
+			info.password=newPassword
 			info.save()
 			
 			username.save()

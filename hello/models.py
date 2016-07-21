@@ -5,5 +5,8 @@ class Greeting(models.Model):
     when = models.DateTimeField('date created', auto_now_add=True)
 
 class LoginInfo(models.Model):
-	username=models.CharField(max_length=100)
-	password=models.CharField(max_length=100)
+	username=models.TextField()
+	password=models.TextField()
+	
+	def __str__(self):
+		return self.username
