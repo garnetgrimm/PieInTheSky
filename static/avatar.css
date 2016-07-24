@@ -23,25 +23,86 @@
 
 #eye {
 	position: absolute;
-	top: 50px;
+	top: 60px;
 	left: 60px;
+	z-index: 2;
 }
 
 #nose {
 	position: absolute;
-	top: 60px;
+	top: 65px;
 	left: 63px;
-	z-index: 1;
+	z-index: 3;
 }
 
 #brow {
 	position: absolute;
-	top: 35px;
+	top: 49px;
 	left: 60px;
+	z-index: 2;
+}
+
+#hair {
+	position: absolute;
+	top: 21px;
+	left: 56px;
+}
+
+#facial_hair {
+	position: absolute;
+	top: 68px;
+	left: 57px;
+	z-index: 1;
 }
 
 div#buttons {
+	padding-left: 15px;
+	font-size: 15px;
+	font-family: 'Press Start 2P', cursive;
+	font-weight: 900;
 	position: absolute;
 	top: 150px;
+	text-align:center;
+	color:white;
 }
 
+h2 {
+	font-size: 15px;
+	font-family: 'Press Start 2P', cursive;
+	font-weight: 900;
+	top: 150px;
+	padding-left: 15px;
+	color:white;
+}
+
+button {
+	background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+	color:black;
+	font-size: 15px;
+	font-family: 'Press Start 2P', cursive;
+	color:white;
+}
+
+button:hover {
+	border: none;
+	position:relative;
+	top:1px;
+}
+button:active {
+	position:relative;
+	top:2px;
+}
+
+#background {
+	transform: scale(0.5,0.5);
+	position:absolute;
+	top:-182px;
+	left:-142px;
+	z-index: -1;
+	border: 15px solid black;
+}

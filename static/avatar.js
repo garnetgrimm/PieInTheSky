@@ -1,25 +1,24 @@
 var currNum = 1;
-var maxPart = 4;
 
 var currSkin = 0;
 var maxSkin = 4;
 
-var x = 0;
-var y = 0;
+var x = 75;
+var y = 30;
 
 var hatY = 0;
 
 var currEyeColor = 0;
 //for this code to work, there needs to be the same number of all items
 
-function changeImgLeft(imgType) {
+function changeImgLeft(imgType, maxPart) {
 	currNum++;
 	if(currNum > maxPart) currNum = 1;
 	var x = document.getElementById(imgType);
 	x.src = "parts/" + imgType + "/" + imgType + " (" + currNum + ").png"; 
 }
 
-function changeImgRight(imgType) {
+function changeImgRight(imgType, maxPart) {
 	currNum--;
 	if(currNum < 1) currNum = maxPart;
 	var x = document.getElementById(imgType);
@@ -120,7 +119,9 @@ function setLoc(id, x, y) {
 function setCss() {	
 	setLoc("head", 50 + x, 40 + y);
 	setLoc("mouth", 63 + x, 85 + y);
-	setLoc("nose", 63 + x, 60 + y);
-	setLoc("brow", 60 + x, 35 + y);
-	setLoc("eye", 60 + x, 50 + y);
+	setLoc("nose", 63 + x, 65 + y);
+	setLoc("brow", 60 + x, 49 + y);
+	setLoc("eye", 60 + x, 60 + y);
+	setLoc("hair", 56 + x, 21 + y);
+	setLoc("facial_hair", 58 + x, 68 + y);
 }  setCss();

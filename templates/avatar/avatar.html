@@ -1,49 +1,60 @@
 <!DOCTYPE html>
 <html>
 	<link rel="stylesheet" type="text/css" href="avatar.css">
+	<link href='https://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
+
+	<h2> <u>  Design Yourself!  <u> </h2>
 	
-	<body>
-		<canvas id="myCanvas"> </canvas>
-		
+	<img id="background" src="darkSpace.png" alt="Spacey">
+	
+	<body>		
 		<img id="head" class="avatarPart skin" src="parts/head/head (1).png" alt="Head">
 		<img id="mouth" class="avatarPart" src="parts/mouth/mouth (1).png" alt="Mouth">
 		<img id="nose" class="avatarPart skin" src="parts/nose/nose (1).png" alt="Nose">
 		<img id="eye" class="avatarPart" src="parts/eye/eye (1).png" alt="Eye">
 		<img id="brow" class="avatarPart" src="parts/brow/brow (1).png" alt="Brow">
+		<img id="hair" class="avatarPart" src="parts/hair/hair (1).png" alt="Hair">
+		<img id="facial_hair" class="avatarPart" src="parts/facial_hair/facial_hair (1).png" alt="Facial Hair">
 		
 		<script src="avatar.js"> </script>
 
 		<div id="buttons">
 			<br>
 			head
-			<button onclick="changeImgLeft('head')"><</button>
-			<button onclick="changeImgRight('head')">></button>
+			<button onclick="changeImgLeft('head', 5)"><</button>
+			<button onclick="changeImgRight('head', 5)">></button>
 			<br>
 			mouth
-			<button onclick="changeImgLeft('mouth')"><</button>
-			<button onclick="changeImgRight('mouth')">></button>
+			<button onclick="changeImgLeft('mouth', 5)"><</button>
+			<button onclick="changeImgRight('mouth', 5)">></button>
 			<br>
 			nose
-			<button onclick="changeImgLeft('nose')"><</button>
-			<button onclick="changeImgRight('nose')">></button>
+			<button onclick="changeImgLeft('nose', 5)"><</button>
+			<button onclick="changeImgRight('nose', 5)">></button>
 			<br>
 			eyes
-			<button onclick="changeImgLeft('eye')"><</button>
-			<button onclick="changeImgRight('eye')">></button>
+			<button onclick="changeImgLeft('eye', 5)"><</button>
+			<button onclick="changeImgRight('eye', 5)">></button>
 			<br>
 			eyebrow
-			<button onclick="changeImgLeft('brow')"><</button>
-			<button onclick="changeImgRight('brow')">></button>
+			<button onclick="changeImgLeft('brow', 5)"><</button>
+			<button onclick="changeImgRight('brow', 5)">></button>
+			<br>
+			hair
+			<button onclick="changeImgLeft('hair', 2)"><</button>
+			<button onclick="changeImgRight('hair', 2)">></button>
+			<br>
+			facial hair
+			<button onclick="changeImgLeft('facial_hair', 2)"><</button>
+			<button onclick="changeImgRight('facial_hair', 2)">></button>
 			<br>
 			skin
 			<button onclick="colorSkinLeft()"><</button>
 			<button onclick="colorSkinRight()">></button>
 			<br>
-			eye
+			eye color
 			<button onclick="colorEyeLeft()"><</button>
 			<button onclick="colorEyeRight()">></button>
-			setCss
-			<button onclick="setCss()">_</button>
 		</div>
 
 	</body>
