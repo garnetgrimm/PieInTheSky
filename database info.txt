@@ -1,0 +1,10 @@
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', 
+        'NAME': 'your_heroku_db_name',                     
+        'USER': 'vqtxqhcbhhszge',
+        'PASSWORD': '1saMeXzunxaJZt55XT2xPV-CEj',
+        'HOST': 'ec2-54-83-22-233.compute-1.amazonaws.com', # Or something like this
+        'PORT': '5432',                     
+    }
+}
