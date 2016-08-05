@@ -3,7 +3,7 @@
 
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
+<link rel="stylesheet" type="text/css" href="avatar.css">
 <link href='https://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
 <style>
 canvas {
@@ -11,64 +11,10 @@ canvas {
     background-color: #f1f1f1;
 	image-rendering: pixelated;
 }
-div#buttons {
-	padding-left: 15px;
-	font-size: 15px;
-	font-family: 'Press Start 2P', cursive;
-	font-weight: 900;
-	position: absolute;
-	top: 150px;
-	text-align:center;
-	color:white;
-}
-
-h2 {
-	font-size: 15px;
-	font-family: 'Press Start 2P', cursive;
-	font-weight: 900;
-	top: 10px;
-	padding-left: 22px;
-	color:white;
-	position: absolute;
-}
-
-button {
-	background-color: Transparent;
-    background-repeat:no-repeat;
-    border: none;
-    cursor:pointer;
-    overflow: hidden;
-    outline:none;
-	color:black;
-	font-size: 15px;
-	font-family: 'Press Start 2P', cursive;
-	color:white;
-}
-
-button:hover {
-	border: none;
-	position:relative;
-	top:1px;
-}
-button:active {
-	position:relative;
-	top:2px;
-}
-
-#background {
-	transform: scale(0.5,0.5);
-	position:absolute;
-	top:-182px;
-	left:-142px;
-	z-index: -1;
-	border: 15px solid black;
-}
 </style>
 </head>
 <body onload="startGame()">
 <script>
-
-var head;
 
 function startGame() {
 	background = new component("back", 135, 175, 0, 0, "background", 1);
@@ -85,6 +31,7 @@ function startGame() {
 var myGameArea = {
     canvas : document.createElement("canvas"),
     start : function() {
+		this.canvas.id = "charCreator";
         this.canvas.width = 270;
         this.canvas.height = 350;
         this.context = this.canvas.getContext("2d");
@@ -108,6 +55,7 @@ function component(tag, width, height, x, y, type, max) {
     if (type == "image") {
         this.image = new Image();
         this.image.src = "parts/" + tag + "/" + tag + " (1).png";
+		//this is just to easily move the head//
 		x += 60;
 		y += 20;
     }
@@ -165,10 +113,30 @@ function changeImage(id, dir) {
 	obj.image.src = "parts/" + obj.tag + "/" + obj.tag + " (" + obj.currObj + ").png";
 }
 
-function clearchangeImage() {
-    //head.image.src = "smiley.gif";
-    //head.speedX = 0;
-    //head.speedY = 0;
+function recolorImage(oc, oldRed, oldGreen, oldBlue, newRed, newGreen, newBlue) {	
+	var oldCanvas = document.getElementById(oc);
+    var ctx = oldCanvas.getContext("2d");
+    var w = oldCanvas.width;
+    var h = oldCanvas.height;
+
+    // pull the entire image into an array of pixel data
+    var imageData = ctx.getImageData(0, 0, w, h);
+
+    // examine every pixel, 
+    // change any old rgb to the new-rgb
+    for (var i = 0; i < imageData.data.length; i += 4) {
+        // is this pixel the old rgb?
+        if (imageData.data[i] == oldRed && imageData.data[i + 1] == oldGreen && imageData.data[i + 2] == oldBlue) {
+            // change to your new rgb
+            imageData.data[i] = newRed;
+            imageData.data[i + 1] = newGreen;
+            imageData.data[i + 2] = newBlue;
+        }
+    }
+    // put the altered data back on the canvas  
+    ctx.putImageData(imageData, 0, 0);
+    // put the re-colored image back on the image
+
 }
 </script>
 
@@ -211,8 +179,8 @@ function clearchangeImage() {
 	<button onclick="colorSkinRight()">></button>
 	<br>
 	eye color
-	<button onclick="colorEyeLeft()"><</button>
-	<button onclick="colorEyeRight()">></button>
+	<button onclick="recolorImage('charCreator', 0, 160, 160, 0, 0, 0);"><</button>
+	<button onclick="recolorImage('charCreator', 0, 160, 160, 0, 0, 0);">></button>
 </div>
 
 </html>
