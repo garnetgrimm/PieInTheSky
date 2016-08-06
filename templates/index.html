@@ -1,1 +1,18 @@
-<html> test </html>
+<html> 
+	<form action="/LogIn" method="Post">
+	  Username:<br>
+	  <input type="text" name="username"><br>
+	  Password:<br>
+	  <input type="password" name="password">
+	  <br> <br>
+	  <input type="submit" name="Submit" value="Log in">
+	</form>
+	 
+	<form action="/SignUpPage" method="Post">
+	  <input type="submit" name="Submit" value="Sign up">
+	</form>
+	
+	{% if message %}
+		<p><strong> {{ message }} </strong>
+	{% endif %}
+ </html>
