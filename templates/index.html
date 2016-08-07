@@ -1,4 +1,117 @@
-<html> 
+<html style="text-align: center;">
+
+	<title> The Offical Makerspace Hub </title>
+	
+	<h1> <strong> Pie In The Sky </strong> </h1>
+	
+	<style> 
+		#forms {
+		  position: fixed;
+		  top: 50%;
+		  left: 50%;
+		  margin-top: -150px;
+		  margin-left: -100px;
+		  width: 200px; 
+		  border: 2px solid black; 
+		  background-color: white;
+		}
+		h1 {
+		  width: 100vw;
+		  margin-top: -10px;
+		  margin-left: -10px;
+		  border: 2px solid black;
+		  background-color: white;
+		  z-index: 2;
+		}
+	</style>
+	
+	<style> canvas {  position: absolute; left: 0; top: 0; z-index: -1; } </style>
+
+	<div> </div>
+
+	<script>
+
+	var x = 0;
+	var y = 0;
+
+	var comp = []
+
+	var curr = 0;
+	var maxWidth = 0;
+	var dec = true;
+	var speed = 1;
+
+	function startGame() {
+		comp[0] = new component(1200, 800);
+		comp[1] = new component(1200, 900);
+		
+		for(var i = 0; i < comp.length - 1; i++) {
+			maxWidth += comp[i].width;
+		}
+
+		console.log(maxWidth);
+		
+		myGameArea.start();
+	}
+
+	var myGameArea = {
+		canvas : document.createElement("canvas"),
+		start : function() {
+			this.canvas.id = "charCreator";
+			this.canvas.width = screen.width;
+			this.canvas.height = 800;
+			this.context = this.canvas.getContext("2d");
+			this.context.imageSmoothingEnabled = false;
+			this.context.mozImageSmoothingEnabled = false;
+			this.context.imageSmoothingEnabled = false;
+			document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+			this.frameNo = 0;
+			this.interval = setInterval(updateGameArea, 20);
+			},
+		clear : function() {
+			this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+		},
+		stop : function() {
+			clearInterval(this.interval);
+		}
+	}
+
+	function component(width, height) {
+		this.image = new Image();
+		this.image.src = "index_back" + curr + ".jpg";
+		this.width = width;
+		this.height = height;
+		this.xInc = 0;
+		for(var i = 0; i < curr; i++) {
+			this.xInc += comp[i].width;
+		}
+		
+		this.update = function() {
+			ctx = myGameArea.context;
+			ctx.drawImage(this.image, (x + this.xInc), y);
+		}
+		
+		curr++;
+	}
+
+	function updateGameArea() {
+		myGameArea.clear();
+		for(var i = 0; i < curr; i++) {
+			comp[i].update();
+		}
+		
+		if(x < -maxWidth) dec = false;
+		if(x > 0) dec = true;
+		
+		if(dec)	x -= speed;
+		else x += speed;
+	}
+
+	startGame();
+	</script>
+
+	<div id="forms">
+
 	<form action="/LogIn" method="Post">
 	  Username:<br>
 	  <input type="text" name="username"><br>
@@ -15,4 +128,6 @@
 	{% if message %}
 		<p><strong> {{ message }} </strong>
 	{% endif %}
+	
+	</div>
  </html>
