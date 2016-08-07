@@ -1,0 +1,32 @@
+<html>
+<script>
+function sendForm() {
+	var parts = [];
+	
+	parts[0] = head.currObj;
+	parts[1] = mouth.currObj;
+	parts[2] = nose.currObj;
+	parts[3] = eye.currObj;
+	parts[4] = eyebrow.currObj;
+	parts[5] = hair.currObj;
+	parts[6] = facial_hair.currObj;
+	
+	var avatarString = "";
+	
+	for(i = 0; i < parts.length; i++) {
+		if(i != parts.length - 1) avatarString += (parts[i] + ":")
+		else avatarString += (parts[i] + "")
+	}
+	
+	document.getElementById("avatarString").value = avatarString;
+	document.getElementById("avatarVals").submit();
+}
+</script>
+<button onclick="sendForm();" style="color:black"> save </button>
+
+<form action="/TEST" id='avatarVals' method='Post'>
+  <input type="hidden" name="avatarString" id="avatarString">
+</form>
+
+{% extends "avatar/avatar.html" %}
+</html>

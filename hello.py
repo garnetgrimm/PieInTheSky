@@ -1,4 +1,4 @@
-import os
+import os, sys
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 
@@ -15,32 +15,47 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 	
 db = SQLAlchemy(app)
 
+class curr():
+	currentUser = ""
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True)
     password = db.Column(db.String(120))
+    avatar = db.Column(db.String(42))
 
-    def __init__(self, username, password):
+    def __init__(self, username, password, avatar):
         self.username = username
         self.password = password
+        self.avatar = avatar
 
     def __repr__(self):
         return '<Name %r>' % self.username	
-		
+
 @app.route('/')
 def hello_world():
 	return render_template('index.html')
 	
+@app.route("/TEST", methods=['POST'])
+def TEST():
+	currUser = User.query.filter_by(username=curr.currentUser).first()
+	currUser.avatar = request.form['avatarString']
+	db.session.commit()
+	
+	return render_template('avatar/design_avatar.html', currAvatar=request.form['avatarString'])
+	
 @app.route('/LogIn', methods=['POST'])
 def login():
-	#user = User(request.form['username'], request.form['password'])
 	username = request.form['username']
 	password = request.form['password']
 	
+	curr.currentUser = username
+	
 	Valid = False
 	
+	currUser = User.query.filter_by(username=username).first()
+	
 	if(username != "" and password != ""):	
-		currUser = User.query.filter_by(username=username).first()
 		try:
 			if(currUser.password == password):
 				Valid = True
@@ -48,14 +63,14 @@ def login():
 			Valid = False
 	
 	if(Valid):
-		return render_template('avatar/avatar.html')
+		print("currAvatar: " + currUser.avatar)
+		return render_template('avatar/design_avatar.html', currAvatar=currUser.avatar)
 	else:
 		return render_template('index.html', message="Invalid username or password")
 	
 @app.route('/SignUpPage', methods=['POST'])	
 def signUpPage():
-	return render_template('signUp.html')
-	
+	return render_template('signUp.html')	
 	
 @app.route('/SignUp', methods=['POST'])
 def signUp():
@@ -68,7 +83,7 @@ def signUp():
 		return render_template('signUp.html', error=error)
 	
 	try:
-		user = User(username, password)
+		user = User(username, password, "1:1:1:1:1:1:1")
 		db.session.add(user)
 		db.session.commit()
 		return render_template('index.html', message="You have successfully created an account")

@@ -25,6 +25,7 @@ function startGame() {
 	eyebrow = new component("brow", 8, 2, 49, 50, "image", 5);
 	hair = new component("hair", 20, 10, 24, 16, "image", 2);
 	facial_hair = new component("facial_hair", 16, 16, 32, 44, "image", 2);
+	setDefaults();
     myGameArea.start();
 }
 
@@ -182,6 +183,32 @@ function recolorImage(oc, oldRed, oldGreen, oldBlue, newRed, newGreen, newBlue) 
 	<button onclick="recolorImage('charCreator', 0, 160, 160, 0, 0, 0);"><</button>
 	<button onclick="recolorImage('charCreator', 0, 160, 160, 0, 0, 0);">></button>
 </div>
+
+{% if currAvatar %}
+	<script> 
+		function setDefaults() {
+			var currAvatarString = "{{ currAvatar }}";
+			console.log(currAvatarString);
+			var tokens = currAvatarString.split(":");
+			setImage('head', tokens[0]);
+			setImage('mouth', tokens[1]);
+			setImage('nose', tokens[2]);
+			setImage('eye', tokens[3]);
+			setImage('eyebrow', tokens[4]);
+			setImage('hair', tokens[5]);
+			setImage('facial_hair', tokens[6]);
+		}
+		
+		function setImage(id, num) {
+			this.id = id;
+			this.num = num;
+			var obj = eval(id);
+			obj.currObj = num;
+			obj.image.src = "parts/" + obj.tag + "/" + obj.tag + " (" + obj.currObj + ").png";
+		}
+
+	</script>
+{% endif %}
 
 </html>
 
