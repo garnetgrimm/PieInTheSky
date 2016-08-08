@@ -38,7 +38,7 @@ def hello_world():
 
 @app.route('/Badges', methods=['POST'])
 def badges():
-	return render_template('Badges.html', user= User.query.filter_by(username=curr.currentUser).first().username);
+	return render_template('badges.html', user= User.query.filter_by(username=curr.currentUser).first().username);
 	
 @app.route("/openAvatar", methods=['POST'])
 def openAvatar():
