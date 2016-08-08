@@ -1,4 +1,220 @@
 <html>
+
+{% include 'homeback.html' %}
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="stylesheet" type="text/css" href="avatar.css">
+<link href='https://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
+<style>
+canvas {
+	position: absolute;
+	left: calc((50vw - 135px) + 125px);
+	top: 50px;
+    border:4px solid #d3d3d3;
+    background-color: #f1f1f1;
+	image-rendering: pixelated;
+}
+</style>
+</head>
+<body onload="startGame()">
+<script>
+
+function startGame() {
+	background = new component("back", 135, 175, 0, 0, "background", 1);
+    head = new component("head", 32, 32, 0, 0, "image", 5);
+	eye = new component("eye", 10, 4, 44, 56, "image", 5);
+	nose = new component("nose", 4, 7, 56, 56, "image", 5);
+	mouth = new component("mouth", 6, 4, 52, 75, "image", 5);
+	eyebrow = new component("brow", 8, 2, 49, 50, "image", 5);
+	hair = new component("hair", 20, 10, 24, 16, "image", 2);
+	facial_hair = new component("facial_hair", 16, 16, 32, 44, "image", 2);
+	setDefaults();
+    myGameArea.start();
+}
+
+var myGameArea = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+		this.canvas.id = "charCreator";
+        this.canvas.width = 270;
+        this.canvas.height = 350;
+        this.context = this.canvas.getContext("2d");
+		this.context.imageSmoothingEnabled = false;
+		this.context.mozImageSmoothingEnabled = false;
+		this.context.imageSmoothingEnabled = false;
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        this.frameNo = 0;
+        this.interval = setInterval(updateGameArea, 20);
+        },
+    clear : function() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    },
+    stop : function() {
+        clearInterval(this.interval);
+    }
+}
+
+function component(tag, width, height, x, y, type, max) {
+    this.type = type;
+    if (type == "image") {
+        this.image = new Image();
+        this.image.src = "parts/" + tag + "/" + tag + " (1).png";
+		//this is just to easily move the head//
+		x += 70;
+		y += 50;
+    }
+	if (type == "background") {
+	    this.image = new Image();
+        this.image.src = "darkSpace.png";
+	}
+	this.tag = tag;
+    this.width = width;
+    this.height = height;
+    this.speedX = 0;
+    this.speedY = 0;
+    this.x = x;
+    this.y = y;
+	this.currObj = 1;
+	this.max = max;
+    this.update = function() {
+        ctx = myGameArea.context;
+        if (type == "image" || type == "background") {
+            ctx.drawImage(this.image,
+                this.x,
+                this.y,
+                this.width * 4, this.height * 4);
+        }
+    }
+    this.newPos = function() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+    }
+}
+
+function updateAllParts(obj) {
+	obj.update();
+	obj.newPos();
+}
+
+function updateGameArea() {
+    myGameArea.clear();
+    background.update();
+    updateAllParts(head);
+	updateAllParts(eye);
+	updateAllParts(mouth);
+	updateAllParts(facial_hair);
+	updateAllParts(nose);
+	updateAllParts(hair);
+	updateAllParts(eyebrow);
+}
+
+function changeImage(id, dir) {
+	this.id = id;
+	this.dir = dir;
+	var obj = eval(id);
+    if (dir == "left") { obj.currObj--; if(obj.currObj < 1) obj.currObj = obj.max; }
+    if (dir == "right") { obj.currObj++; if(obj.currObj > obj.max) obj.currObj = 1; }
+	obj.image.src = "parts/" + obj.tag + "/" + obj.tag + " (" + obj.currObj + ").png";
+}
+
+function recolorImage(oc, oldRed, oldGreen, oldBlue, newRed, newGreen, newBlue) {	
+	var oldCanvas = document.getElementById(oc);
+    var ctx = oldCanvas.getContext("2d");
+    var w = oldCanvas.width;
+    var h = oldCanvas.height;
+
+    // pull the entire image into an array of pixel data
+    var imageData = ctx.getImageData(0, 0, w, h);
+
+    // examine every pixel, 
+    // change any old rgb to the new-rgb
+    for (var i = 0; i < imageData.data.length; i += 4) {
+        // is this pixel the old rgb?
+        if (imageData.data[i] == oldRed && imageData.data[i + 1] == oldGreen && imageData.data[i + 2] == oldBlue) {
+            // change to your new rgb
+            imageData.data[i] = newRed;
+            imageData.data[i + 1] = newGreen;
+            imageData.data[i + 2] = newBlue;
+        }
+    }
+    // put the altered data back on the canvas  
+    ctx.putImageData(imageData, 0, 0);
+    // put the re-colored image back on the image
+
+}
+</script>
+
+</body>
+<h2 style="position: absolute; top: 100px; left: calc((50vw - 135px) - 195px);"> <u>  Design Yourself!  <u> </h2>
+
+<div id="buttons" style="position: absolute; top: 145px; left: calc((50vw - 175px) - 150px);">
+	<br>
+	head
+	<button onclick="changeImage('head', 'left')" ontouchstart="changeImage('head', 'left')"><</button>
+	<button onclick="changeImage('head', 'right')" ontouchstart="changeImage('head', 'left')">></button>
+	<br>
+	mouth
+	<button onclick="changeImage('mouth', 'left')" ontouchstart="changeImage('mouth', 'left')"><</button>
+	<button onclick="changeImage('mouth', 'right')" ontouchstart="changeImage('mouth', 'left')">></button>
+	<br>
+	nose
+	<button onclick="changeImage('nose', 'left')" ontouchstart="changeImage('nose', 'left')"><</button>
+	<button onclick="changeImage('nose', 'right')" ontouchstart="changeImage('nose', 'left')">></button>
+	<br>
+	eyes
+	<button onclick="changeImage('eye', 'left')" ontouchstart="changeImage('eye', 'left')"><</button>
+	<button onclick="changeImage('eye', 'right')" ontouchstart="changeImage('eye', 'left')">></button>
+	<br>
+	eyebrow
+	<button onclick="changeImage('eyebrow', 'left')" ontouchstart="changeImage('eyebrow', 'left')"><</button>
+	<button onclick="changeImage('eyebrow', 'right')" ontouchstart="changeImage('eyebrow', 'left')">></button>
+	<br>
+	hair
+	<button onclick="changeImage('hair', 'left')" ontouchstart="changeImage('hair', 'left')"><</button>
+	<button onclick="changeImage('hair', 'right')" ontouchstart="changeImage('hair', 'left')">></button>
+	<br>
+	facial hair
+	<button onclick="changeImage('facial_hair', 'left')" ontouchstart="changeImage('facial_hair', 'left')"><</button>
+	<button onclick="changeImage('facial_hair', 'right')" ontouchstart="changeImage('facial_hair', 'left')">></button>
+	<br>
+	skin
+	<button onclick="colorSkinLeft()"><</button>
+	<button onclick="colorSkinRight()">></button>
+	<br>
+	eye color
+	<button onclick="recolorImage('charCreator', 0, 160, 160, 0, 0, 0);"><</button>
+	<button onclick="recolorImage('charCreator', 0, 160, 160, 0, 0, 0);">></button>
+	<br><br>
+	<button onclick="sendForm();" style="margin-left: -50px;"> SAVE </button>
+</div>
+
+{% if currAvatar %}
+	<script> 
+		function setDefaults() {
+			var currAvatarString = "{{ currAvatar }}";
+			console.log(currAvatarString);
+			var tokens = currAvatarString.split(":");
+			setImage('head', tokens[0]);
+			setImage('mouth', tokens[1]);
+			setImage('nose', tokens[2]);
+			setImage('eye', tokens[3]);
+			setImage('eyebrow', tokens[4]);
+			setImage('hair', tokens[5]);
+			setImage('facial_hair', tokens[6]);
+		}
+		
+		function setImage(id, num) {
+			this.id = id;
+			this.num = num;
+			var obj = eval(id);
+			obj.currObj = num;
+			obj.image.src = "parts/" + obj.tag + "/" + obj.tag + " (" + obj.currObj + ").png";
+		}
+
+	</script>
+{% endif %}
+
 <script>
 function sendForm() {
 	var parts = [];
@@ -22,11 +238,9 @@ function sendForm() {
 	document.getElementById("avatarVals").submit();
 }
 </script>
-<button onclick="sendForm();" style="color:black"> save </button>
 
-<form action="/TEST" id='avatarVals' method='Post'>
+<form action="/saveAvatar" id='avatarVals' method='Post'>
   <input type="hidden" name="avatarString" id="avatarString">
 </form>
 
-{% extends "avatar/avatar.html" %}
 </html>

@@ -1,0 +1,41 @@
+<html style="background-color: #555555;">
+
+<style>
+	form {
+		display: inline;
+	}
+
+	form:hover {
+		border: none;
+		position:relative;
+		top:1px;
+	}
+	form:active {
+		position:relative;
+		top:2px;
+	}
+	
+	input {
+		background-color: Transparent;
+		background-repeat:no-repeat;
+		border: none;
+		cursor:pointer;
+		overflow: hidden;
+		outline:none;
+		font-size: 15px;
+		color:white;
+	}
+	
+	.option {
+		position:relative;
+		margin-left: calc((20vw - 50px));
+	}
+</style>
+
+<div id="features" style="position: absolute; top: 0px; left: 0px; width: calc(100vw - 4px); border: 2px black solid; background-color: #333333; color: white;"> 
+	<form class="option"> <input type="submit" value="News"> </form>
+	<form class="option" action="/openAvatar" method="Post"> <input type="submit" value="Avatar"> </form>
+	<form class="option" action="/Badges" method="Post"> <input type="submit" value="Badges"> </form>
+	<form class="option"> <input type="submit" value="{{ user }}"> </form>
+</div> 
+<html>

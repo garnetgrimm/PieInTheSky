@@ -1,0 +1,25 @@
+p {
+	font-family: 'Press Start 2P', cursive; 
+}
+.badgeInfo {
+	font-family: 'Press Start 2P', cursive; 
+	width:  calc(100vw - 100px);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+} 
+h2 { 
+	position: absolute;
+	font-family: 'Press Start 2P', cursive; 
+	text-align: center
+	top: 45px;
+} 
+button { 
+	border: 1px solid; border-radius: 5px; font-family: 'Press Start 2P', cursive;
+} 
+.sqr {
+	border: solid 5px; 
+}
+html {
+	background-color: #00A3B7;
+}

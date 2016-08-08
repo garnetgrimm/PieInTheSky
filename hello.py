@@ -35,14 +35,23 @@ class User(db.Model):
 @app.route('/')
 def hello_world():
 	return render_template('index.html')
+
+@app.route('/Badges', methods=['POST'])
+def badges():
+	return render_template('Badges.html', user= User.query.filter_by(username=curr.currentUser).first().username);
 	
-@app.route("/TEST", methods=['POST'])
-def TEST():
+@app.route("/openAvatar", methods=['POST'])
+def openAvatar():
+	currUser = User.query.filter_by(username=curr.currentUser).first()
+	return render_template('avatar/design_avatar.html', currAvatar=currUser.avatar, user=currUser.username)
+	
+@app.route("/saveAvatar", methods=['POST'])
+def saveAvatar():
 	currUser = User.query.filter_by(username=curr.currentUser).first()
 	currUser.avatar = request.form['avatarString']
 	db.session.commit()
 	
-	return render_template('avatar/design_avatar.html', currAvatar=request.form['avatarString'])
+	return render_template('avatar/design_avatar.html', currAvatar=request.form['avatarString'], user=currUser.username)
 	
 @app.route('/LogIn', methods=['POST'])
 def login():
@@ -63,8 +72,7 @@ def login():
 			Valid = False
 	
 	if(Valid):
-		print("currAvatar: " + currUser.avatar)
-		return render_template('avatar/design_avatar.html', currAvatar=currUser.avatar)
+		return render_template('homeback.html', user=curr.currentUser)
 	else:
 		return render_template('index.html', message="Invalid username or password")
 	
@@ -79,7 +87,7 @@ def signUp():
 	password = request.form['password']
 	
 	if(username == "" or password == ""):
-		error = "please enter a username and password"
+		error = "Please enter a username and password"
 		return render_template('signUp.html', error=error)
 	
 	try:
@@ -88,5 +96,5 @@ def signUp():
 		db.session.commit()
 		return render_template('index.html', message="You have successfully created an account")
 	except:
-		error = "username taken"
+		error = "Username taken"
 		return render_template('signUp.html', error=error)

@@ -1,4 +1,10 @@
 <html>	
+	{% include 'indexback.html' %}
+
+	<div id="forms">
+	
+	<h3> <u> Sign Up </u> </h3>
+	
 	<form action="/SignUp" method="Post">
 	  Username
 	  <input type="text" name = "username"><br>
@@ -9,6 +15,8 @@
 	</form>
 	
 	{% if error %}
-		<p><strong>Error:</strong> {{ error }}
+		<p><strong> {{ error }}</strong> 
 	{% endif %}
+	
+	</div>
 </html>
