@@ -127,7 +127,3 @@
 		element.appendChild(styleNode);
 		element.appendChild(full);
 	}
-	
-	createButton('Default_Badge.png', '#654321','gray', "Log In", "You created a digital skypy account!");
-	createButton('Default_Badge.png', '#696969','orange', "Log In V2", "This Is just a test because css is touchy");
-	createButton('Default_Badge.png', '#00137F', 'green', 'Long Award', 'This is a long description because you never know you could get some weird crazy specific award lol');

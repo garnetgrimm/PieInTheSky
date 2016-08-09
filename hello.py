@@ -1,6 +1,7 @@
 import os, sys
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
+import json
 
 app = Flask(__name__, static_url_path = "", static_folder = "static")
 try:
@@ -23,14 +24,35 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True)
     password = db.Column(db.String(120))
     avatar = db.Column(db.String(42))
+    badges = db.Column(db.String(42))
 
-    def __init__(self, username, password, avatar):
+    def __init__(self, username, password, avatar, badges):
         self.username = username
         self.password = password
         self.avatar = avatar
+        self.badges = badges
 
     def __repr__(self):
-        return '<Name %r>' % self.username	
+        return '<Name %r>' % self.username
+
+class Badge(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	#('Default_Badge.png', '#654321','gray', "Log In", "You created a digital skypy account!");
+	name = db.Column(db.String(30))
+	picSrc = db.Column(db.String(80))
+	color1 = db.Column(db.String(10))
+	color2 = db.Column(db.String(10))
+	desc = db.Column(db.String(200))
+	
+	def __init__(self, name, picSrc, color1, color2, desc):
+		self.name = name
+		self.picSrc = picSrc
+		self.color1 = color1
+		self.color2 = color2
+		self.desc = desc
+	
+	def __repr__(self):
+		return '<Name %r>' % self.name
 
 @app.route('/')
 def hello_world():
@@ -38,7 +60,25 @@ def hello_world():
 
 @app.route('/Badges', methods=['POST'])
 def badges():
-	return render_template('badges.html', user= User.query.filter_by(username=curr.currentUser).first().username);
+	user = User.query.filter_by(username=curr.currentUser).first()
+	badges = user.badges.split(",", 1)
+	bstring = ""
+	for badgeNum in badges:
+		currBadge = Badge.query.filter_by(id=badgeNum).first()
+		bstring += currBadge.picSrc
+		bstring += "[SPL]"
+		bstring += currBadge.color1
+		bstring += "[SPL]"
+		bstring += currBadge.color2
+		bstring += "[SPL]"
+		bstring += currBadge.name
+		bstring += "[SPL]"
+		bstring += currBadge.desc
+		bstring += "{SPL}"
+	bstring = bstring[:-5]
+	bstring += ""
+	print(bstring)
+	return render_template('badges.html', user=user.username, badges=bstring)
 	
 @app.route("/openAvatar", methods=['POST'])
 def openAvatar():
@@ -91,7 +131,8 @@ def signUp():
 		return render_template('signUp.html', error=error)
 	
 	try:
-		user = User(username, password, "1:1:1:1:1:1:1")
+		user = User(username, password, "1:1:1:1:1:1:1", "1")
+		#												  ^ seperate by commas, the id number of badges they have
 		db.session.add(user)
 		db.session.commit()
 		return render_template('index.html', message="You have successfully created an account")

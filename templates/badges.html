@@ -12,6 +12,17 @@
 
 <script src="badges.js"></script>
 
+<script> 
+	var badges = "{{ badges }}";
+	badges = badges.replace(/&#39;/g, "'");
+	var tokens = badges.split("{SPL}")
+	for(var i = 0; i < tokens.length; i++) {
+		var vals = tokens[i].split("[SPL]");
+		createButton(vals[0], vals[1], vals[2], vals[3], vals[4]);
+		console.log("Test");
+	}
+</script>
+
 <div id="buttons">
 	<!-- <button onclick="createButton('Default_Badge.png', '#00137F', 'green', 'WWWWWWWWW', 'BLAHBLAFHAWFJAEHIAWadwaegawdawdJFJJAWDUGEFWAJAWJF')"> create new badge </button> -->
 </div>
