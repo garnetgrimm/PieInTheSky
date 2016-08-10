@@ -43,18 +43,7 @@
 		menuBacking.appendChild(x);
 		element[0].appendChild(menuBacking);
 	}
-
-	function getTextWidth(text, font) {
-		// re-use canvas object for better performance
-		var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
-		var context = canvas.getContext("2d");
-		context.font = font;
-		var metrics = context.measureText(text);
-		return metrics.width;
-	}
-
-	var buttonNum = 1;
-
+	
 	function createButton(src, color, backcolor, title, text) {
 		var canvas = document.createElement("canvas");
 		var ctx = canvas.getContext("2d");

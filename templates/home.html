@@ -3,5 +3,8 @@
 <html>
 	{% if admin %}
 	{% include 'badgecreator.html' %}
+	{% include 'UserSearch.html' %}
+	{% else %} 
+	<p> Welcome to Skypy! {{ user }} </p>
 	{% endif %}
 </html>

@@ -1,0 +1,28 @@
+<html>
+	<form action="/searchUser" method="Post" style="display: inline; border: solid 5px gray; background-color: gray;"> 
+		<input type="text" name="user">
+		<input type="submit" value="Search User">
+	</form>
+	
+	<div id="users"> <br> </div>
+	
+	
+	<script>
+	function userButton(name) {
+		this.name = name;
+		var button = document.createElement("button");
+		var name = document.createTextNode(name);
+		var br = document.createElement("br");
+		button.appendChild(name);
+		
+		//button.onclick = "selected()";
+		
+		document.getElementById("users").appendChild(button);
+		document.getElementById("users").appendChild(br);
+	}
+	
+	{% if searchres %}
+		userButton("{{ searchres }}");
+	{% endif %}
+	</script>
+</html>

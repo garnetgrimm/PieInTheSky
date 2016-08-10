@@ -53,12 +53,12 @@ class Badge(db.Model):
 		self.desc = desc
 	
 	def __repr__(self):
-		return '<Name %r>' % self.name
-
+		return '<Name %r>' % self.name		
+		
 @app.route('/')
 def hello_world():
 	return render_template('index.html')
-
+	
 @app.route('/Badges', methods=['POST'])
 def badges():
 	user = User.query.filter_by(username=curr.currentUser).first()
@@ -99,6 +99,18 @@ def home():
 	user = User.query.filter_by(username=curr.currentUser).first()
 	return render_template('home.html', user=user.username, admin=user.admin)
 
+@app.route("/searchUser", methods=['POST'])
+def search():
+	#search needs work for sure
+	key = request.form['user']
+	res = User.query.filter_by(username=key).first()
+	user = User.query.filter_by(username=curr.currentUser).first()
+	
+	try:
+		return render_template('home.html', user=user.username, admin=user.admin, searchres=res.username)
+	except:
+		return render_template('home.html', user=user.username, admin=user.admin)
+	
 @app.route("/createBadge", methods=["POST"])
 def createBadge():
 	name = request.form['name']
@@ -106,6 +118,11 @@ def createBadge():
 	c1 = request.form['color1']
 	c2 = request.form['color2']
 	desc = request.form['desc']
+	
+	desc = desc.replace('\r', '')
+	desc = desc.replace('\n', '')
+	
+	print(desc)
 	
 	badge = Badge(name, pic, c1, c2, desc)
 	db.session.add(badge)
