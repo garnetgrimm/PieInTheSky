@@ -9,10 +9,9 @@ p {
 	text-overflow: ellipsis;
 } 
 h2 { 
-	position: absolute;
+	position: relative;
 	font-family: 'Press Start 2P', cursive; 
-	text-align: center
-	top: 45px;
+	text-align: center;
 } 
 button { 
 	border: 1px solid; border-radius: 5px; font-family: 'Press Start 2P', cursive;
@@ -22,4 +21,7 @@ button {
 }
 html {
 	background-color: #00A3B7;
+}
+canvas {
+	border: solid 2px black;
 }

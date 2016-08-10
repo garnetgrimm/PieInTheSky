@@ -25,13 +25,14 @@ class User(db.Model):
     password = db.Column(db.String(120))
     avatar = db.Column(db.String(42))
     badges = db.Column(db.String(42))
-
+    admin = db.Column(db.Boolean)
+	
     def __init__(self, username, password, avatar, badges):
         self.username = username
         self.password = password
         self.avatar = avatar
         self.badges = badges
-
+        self.admin = False
     def __repr__(self):
         return '<Name %r>' % self.username
 
@@ -92,6 +93,25 @@ def saveAvatar():
 	db.session.commit()
 	
 	return render_template('avatar/design_avatar.html', currAvatar=request.form['avatarString'], user=currUser.username)
+
+@app.route("/Home", methods=['POST'])
+def home():
+	user = User.query.filter_by(username=curr.currentUser).first()
+	return render_template('home.html', user=user.username, admin=user.admin)
+
+@app.route("/createBadge", methods=["POST"])
+def createBadge():
+	name = request.form['name']
+	pic = request.form['picSrc']
+	c1 = request.form['color1']
+	c2 = request.form['color2']
+	desc = request.form['desc']
+	
+	badge = Badge(name, pic, c1, c2, desc)
+	db.session.add(badge)
+	db.session.commit()
+	
+	return home()
 	
 @app.route('/LogIn', methods=['POST'])
 def login():
@@ -112,7 +132,7 @@ def login():
 			Valid = False
 	
 	if(Valid):
-		return render_template('homeback.html', user=curr.currentUser)
+		return render_template('home.html', user=curr.currentUser, admin=currUser.admin)
 	else:
 		return render_template('index.html', message="Invalid username or password")
 	

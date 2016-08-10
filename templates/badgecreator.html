@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<link href='https://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
+
+<br>
+
+<h3> <u> Create A Badge  </u> </h3> 
+
+<style>
+html {
+	text-align: center;
+}
+ 
+textarea {
+    resize: none;
+}
+.achievement { 
+	width: 100px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+canvas {
+	border: solid 5px; 
+	image-rendering: optimizeSpeed;             /* Older versions of FF          */	
+	image-rendering: -moz-crisp-edges;          /* FF 6.0+                       */
+	image-rendering: -webkit-optimize-contrast; /* Safari                        */
+	image-rendering: -o-crisp-edges;            /* OS X & Windows Opera (12.02+) */
+	image-rendering: pixelated;                 /* Awesome future-browsers       */
+	-ms-interpolation-mode: nearest-neighbor; 
+}
+
+h3 {
+	font-family: 'Press Start 2P', cursive;
+}
+</style>
+
+<textarea name="name" cols=25 rows=1 wrap=hard form="badgeInfo"> </textarea>
+<br>
+<textarea name="color1" cols=11 rows=1 wrap=hard form="badgeInfo"> </textarea>
+<textarea name="color2" cols=11 rows=1 wrap=hard form="badgeInfo"> </textarea>
+<br>
+<textarea name="desc" cols=27 rows=5 wrap=hard form="badgeInfo"> </textarea>
+
+<br><br>
+
+<form id="badgeInfo" action="/createBadge" method="Post"> 
+    <input type="hidden" name="picSrc" value="Default_Badge.png"> </input>
+	<input type="submit" value="Create Badge"> 
+</form>
+
+<script>
+	function createButton(src, color, backcolor, title, text) {
+		var canvas = document.createElement("canvas");
+		var ctx = canvas.getContext("2d");
+		//canvas.width = screen.width - 50;
+		canvas.width = 400;
+		canvas.height = 64;
+		
+		ctx.imageSmoothingEnabled = false;
+		ctx.mozImageSmoothingEnabled = false;
+		ctx.imageSmoothingEnabled = false;
+		
+		this.src = src;
+		this.color = color;
+		this.backcolor = backcolor;
+		this.title = title;
+		this.text = text;
+		
+		ctx.fillStyle = this.color;
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		
+		ctx.font="16px 'Press Start 2P'";
+		ctx.fillStyle = backcolor;
+		
+		var text = title + ": " + text;
+		
+		var tooBig = false;
+		if(ctx.measureText(title + ": " + text).width > canvas.width) tooBig = true;
+		
+		if(tooBig) {
+			while(tooBig) {
+				text = text.slice(0, -1);
+				if(ctx.measureText(title + ": " + text).width > canvas.width) tooBig = true;
+				else tooBig = false;
+			}
+			
+			text = text.slice(0, -3);
+			text += "...";
+		}
+		
+		ctx.fillText(text, canvas.height + 5, 40);
+		
+		var badgePic = new Image();
+		badgePic.onload = function () {
+			ctx.drawImage(badgePic, 0, 0, canvas.height, canvas.height);
+		}
+		badgePic.src = "Default_Badge.png";
+		try {
+			document.getElementById("badges").removeChild(document.getElementsByTagName("canvas")[0]);
+		} catch(err) {
+		}
+		document.getElementById("badges").appendChild(canvas);
+	}
+
+	function createPrev() {
+		var name = document.getElementsByName('name')[0].value
+		var c1 = document.getElementsByName('color1')[0].value
+		var c2 = document.getElementsByName('color2')[0].value
+		var desc = document.getElementsByName('desc')[0].value
+		var src = document.getElementsByName('picSrc')[0].value
+		
+		createButton(src, c1, c2, name, desc);
+	}
+</script>
+
+<button onclick="createPrev();"> Generate Preview </button>
+
+<div id="badges"> <br> </div>
+
+</html>

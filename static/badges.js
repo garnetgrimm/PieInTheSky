@@ -56,74 +56,49 @@
 	var buttonNum = 1;
 
 	function createButton(src, color, backcolor, title, text) {
+		var canvas = document.createElement("canvas");
+		var ctx = canvas.getContext("2d");
+		canvas.width = screen.width - 50;
+		canvas.height = 64;
 		
-		this.backcolor = backcolor;
-		this.color = color;
+		ctx.imageSmoothingEnabled = false;
+		ctx.mozImageSmoothingEnabled = false;
+		ctx.imageSmoothingEnabled = false;
+		
 		this.src = src;
+		this.color = color;
+		this.backcolor = backcolor;
+		this.title = title;
 		this.text = text;
 		
-	    var styleNode = document.createElement('style');
-	    styleNode.type = "text/css";
-	    // browser detection (based on prototype.js)
-	    if(!!(window.attachEvent && !window.opera)) {
-			styleNode.styleSheet.cssText = "#achievement" + buttonNum + ":hover { color: " + backcolor + "; }";
-	    } else {
-			var styleText = document.createTextNode("#achievement" + buttonNum + ":hover { color: " + backcolor + "; }");
-			styleNode.appendChild(styleText);
-	    }
-
-		var full = document.createElement("div");
-		full.id = "achievement" + buttonNum;
-		full.onclick = function() { if(fullOpen == false) openFull(src, color, backcolor, title, text); };
+		ctx.fillStyle = this.color;
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
 		
-		var img = document.createElement("img");
-		var sqr = document.createElement("div");
-		var txt = document.createElement("p");
-		txt.className = "badgeInfo"
-		var bold = document.createElement("i");
+		ctx.font="16px 'Press Start 2P'";
+		ctx.fillStyle = backcolor;
 		
-		sqr.className = "sqr";
+		var text = title + ": " + text;
 		
-		var ttlText = document.createTextNode(title);
-		bold.appendChild(ttlText);
+		var tooBig = false;
+		if(ctx.measureText(title + ": " + text).width > canvas.width) tooBig = true;
 		
-		var txtText = document.createTextNode(":  " + text);
-		txt.appendChild(bold);
-		txt.appendChild(txtText);
+		if(tooBig) {
+			while(tooBig) {
+				text = text.slice(0, -1);
+				if(ctx.measureText(title + ": " + text).width > canvas.width) tooBig = true;
+				else tooBig = false;
+			}
+			
+			text = text.slice(0, -3);
+			text += "...";
+		}
 		
-		img.src = src;
-		var element = document.getElementById("badges");
+		ctx.fillText(text, canvas.height + 5, 40);
 		
-		var padding = 90;
-		
-		var style = "";
-		style += "image-rendering: pixelated;"
-		style += "transform: scale(5, 5);"
-		style += "-ms-transform: scale(5, 5);"
-		style += "-webkit-transform: scale(5, 5);"
-		style += "position: absolute;"
-		style += "left: 38px;"
-		style += "top: " + (32 + (buttonNum * padding)) + "px;"
-		img.style = style;
-		
-		style = "";
-		style += "position: absolute;"
-		style += "left: 1px;"
-		style += "top: " + ((buttonNum * padding) - 5) + "px;"
-		style += "width: calc(100vw - 5px);"
-		style += "height:80px;"
-		style += "background-color:	" + color + ";"
-		sqr.style = style;
-		
-		style = "";
-		style += "position: absolute; left: " + (100) + "px; top: " + ((buttonNum * padding) + 16) + "px;"
-		txt.style = style;
-		
-		
-		buttonNum++;
-		full.appendChild(sqr);
-		full.appendChild(txt);
-		full.appendChild(img);
-		element.appendChild(styleNode);
-		element.appendChild(full);
+		var badgePic = new Image();
+		badgePic.onload = function () {
+			ctx.drawImage(badgePic, 0, 0, canvas.height, canvas.height);
+		}
+		badgePic.src = "Default_Badge.png";
+		document.getElementById("badges").appendChild(canvas);
 	}
