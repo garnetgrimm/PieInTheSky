@@ -16,6 +16,24 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 	
 db = SQLAlchemy(app)
 
+def getBadgeString(badges):
+	bstring = ""
+	for badgeNum in badges:
+		currBadge = Badge.query.filter_by(id=badgeNum).first()
+		bstring += currBadge.picSrc
+		bstring += "[SPL]"
+		bstring += currBadge.color1
+		bstring += "[SPL]"
+		bstring += currBadge.color2
+		bstring += "[SPL]"
+		bstring += currBadge.name
+		bstring += "[SPL]"
+		bstring += currBadge.desc
+		bstring += "{SPL}"
+	bstring = bstring[:-5]
+	bstring += ""
+	return bstring
+
 class curr():
 	currentUser = ""
 
@@ -63,22 +81,7 @@ def hello_world():
 def badges():
 	user = User.query.filter_by(username=curr.currentUser).first()
 	badges = user.badges.split(",", 1)
-	bstring = ""
-	for badgeNum in badges:
-		currBadge = Badge.query.filter_by(id=badgeNum).first()
-		bstring += currBadge.picSrc
-		bstring += "[SPL]"
-		bstring += currBadge.color1
-		bstring += "[SPL]"
-		bstring += currBadge.color2
-		bstring += "[SPL]"
-		bstring += currBadge.name
-		bstring += "[SPL]"
-		bstring += currBadge.desc
-		bstring += "{SPL}"
-	bstring = bstring[:-5]
-	bstring += ""
-	print(bstring)
+	bstring = getBadgeString(badges)
 	return render_template('badges.html', user=user.username, badges=bstring)
 	
 @app.route("/openAvatar", methods=['POST'])
@@ -129,7 +132,23 @@ def createBadge():
 	db.session.commit()
 	
 	return home()
+
+@app.route('/AwardUsers', methods=['POST'])
+def awardUsers():
+	user = User.query.filter_by(username=curr.currentUser).first() 
+	award = Badge.query.all()
 	
+	#error because of how bstring is stored
+	bstring = []
+	for i in range(0, len(award)):
+		bstring.append(i + 1)
+	
+	print(bstring)
+	
+	award = getBadgeString(bstring)
+	
+	return render_template('home.html', user=user.username, admin=user.admin, award=award)
+
 @app.route('/LogIn', methods=['POST'])
 def login():
 	username = request.form['username']

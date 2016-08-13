@@ -1,0 +1,201 @@
+<html>
+<style>
+#slider
+{
+    writing-mode: bt-lr; /* IE */
+    -webkit-appearance: slider-vertical; /* WebKit */
+    width: 8px;
+    height: 192px;
+    padding: 0 5px;
+	margin-left: 9px;
+	margin-top: -2px;
+}
+
+#allBadges {
+	position: absolute;
+	height:200px;
+	width: 339px;
+	border:4px solid #000;
+	left: 50%;
+	margin-left: -165px;
+}
+</style>
+
+<div id="allBadges" style="background-color: gray; display: inline;">
+	<div style="text-align: left;">
+	<input type="range" orient="vertical" id="slider" value="0"/>
+	<canvas id="achieves" height=192 style="margin-left: 4px;"> </canvas>
+	</div>
+</div>
+
+<script>
+function badge(src, c1, c2, title, desc) {
+	this.src = src;
+	this.c1 = c1;
+	this.c2 = c2;
+	this.title = title;
+	this.desc = desc;
+}
+</script>
+
+<script>
+	var clickedBadges = [];
+
+	var canvas = document.getElementById("achieves");
+	var context = canvas.getContext('2d');
+	
+	var MouseY = 0;
+
+	var allbadges = [];
+	
+	var badges = "{{ award }}";
+	badges = badges.replace(/&#39;/g, "'");	
+	var tokens = badges.split("{SPL}")
+	for(var i = 0; i < tokens.length; i++) {
+		var vals = tokens[i].split("[SPL]");
+		allbadges[i] = new badge(vals[0], vals[1], vals[2], vals[3], vals[4]);
+	}
+	
+	context.imageSmoothingEnabled = false;
+	context.mozImageSmoothingEnabled = false;
+	context.imageSmoothingEnabled = false;
+	
+	var badge_width = 64;
+	var badges = allbadges.length;
+	
+	var lastSlider = -1;
+	
+	function updateClock() {
+	var slider = document.getElementById("slider").value;
+
+	slider = ((slider * 0.01) * (badge_width * (badges - 3))) - ((badges - 3) * badge_width);
+	
+	if(lastSlider != slider) {
+		context.clearRect(0, 0, canvas.width, canvas.height);
+		context.fillStyle = "black";
+		context.fillRect(0, 0, canvas.width, canvas.height);
+		for(var i = 0; i < badges; i++) {
+			createButton(context, "", allbadges[i].c1, allbadges[i].c2, allbadges[i].title, allbadges[i].desc);
+		}
+	}
+	
+	drawBorder(ctx);
+	
+	lastSlider = slider;
+	
+	function createButton(ctx, src, color, backcolor, title, text) {		
+		this.ctx = ctx;
+		this.src = src;
+		this.color = color;
+		this.backcolor = backcolor;
+		this.title = title;
+		this.text = text;
+		
+		if(badges > 3) var yInc = slider + (i * badge_width);
+		else var yInc = i * badge_width;
+		
+		ctx.fillStyle = this.color;
+		ctx.fillRect(0, yInc, canvas.width, badge_width);
+		
+		ctx.font="16px 'Press Start 2P'";
+		ctx.fillStyle = backcolor;
+		
+		ctx.fillText(title, badge_width + 5, yInc + 40);
+		
+		var badgePic = new Image();
+		badgePic.onload = function () {
+			ctx.drawImage(badgePic, 0, yInc, badge_width, badge_width);
+		}
+		badgePic.src = "Default_Badge.png";
+	}
+	
+    // call this function again in 100ms
+    setTimeout(updateClock, 100);
+}
+
+function getMousePos(canvas, evt) {
+	var rect = canvas.getBoundingClientRect();
+    return {
+        x: evt.clientX - rect.left,
+        y: evt.clientY - rect.top
+      };
+    }
+    var canvas = document.getElementById('achieves');
+    var context = canvas.getContext('2d');
+
+    canvas.addEventListener('mousemove', function(evt) {
+		var mousePos = getMousePos(canvas, evt);
+		MouseY = mousePos.y;
+	}, false);
+
+function drawBorder(ctx) {
+
+	var slider = 0;
+		
+	if(badges > 3) {
+		slider = ((document.getElementById("slider").value * 0.01) * (badge_width * (badges - 3))) - ((badges - 3) * badge_width);
+	}
+	
+	var borderY = currentBadge();
+	
+	this.ctx = ctx; 
+	ctx.lineWidth=10;
+	ctx.strokeStyle = "black";
+	
+	for(var i = 0; i < badges; i++) {
+		var use = true;
+	
+		for(var b = 0; b < clickedBadges.length; b++) if(i == clickedBadges[b]) use = false; 
+		if(i == borderY) use= false;
+		
+		if(use) {
+			ctx.strokeRect(0, (i * 64) + slider, canvas.width, 64);
+		}
+	}
+
+	ctx.strokeStyle = "#FF00FF";
+	for(var b = 0; b < clickedBadges.length; b++) {
+		ctx.strokeRect(0, (clickedBadges[b] * 64) + slider, canvas.width, 64);
+	}
+	ctx.strokeStyle = "red";
+	if(borderY >= 0) ctx.strokeRect(0, (borderY * 64) + slider, canvas.width, 64);
+}
+
+function click(event) {
+	var b = currentBadge();
+	var found = false;
+	
+	for(var i = 0; i < clickedBadges.length; i++) {
+		if(clickedBadges[i] == b) found = true;
+	}
+	if(found == false) clickedBadges[clickedBadges.length] = b;
+	else {
+		var index = clickedBadges.indexOf(b);
+		if (index >= 0) {
+		  clickedBadges.splice( index, 1 );
+		}
+	}
+}
+
+function currentBadge() {
+	var slider = 0;
+		
+	if(badges > 3) {
+		slider = ((document.getElementById("slider").value * 0.01) * (badge_width * (badges - 3))) - ((badges - 3) * badge_width);
+	}
+	
+	return borderY = (Math.round((((MouseY - slider) - 5 - (badge_width / 2)) / badge_width)));
+}
+
+document.addEventListener("click", click);
+
+updateClock(); // initial call
+</script>
+	
+<!-- 
+//make button show up, when pressed send a form with the selected badges
+<button onclick="sendBadges()"> Award! </button>
+<form> <input type="hidden"> </form>
+ -->
+	
+</html>

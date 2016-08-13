@@ -4,7 +4,17 @@
 	{% if admin %}
 	{% include 'badgecreator.html' %}
 	{% include 'UserSearch.html' %}
+	{% if searchres %}
+	<form action="/AwardUsers" method="Post"> <input type="submit" value="Award User"> </form>
+	{% endif %}
+	
+	{% if award %}
+	{% include 'BadgeSlider.html' %}
+	{% endif %}
+	
 	{% else %} 
-	<p> Welcome to Skypy! {{ user }} </p>
+	<br>
+	<br>
+	<h1> Welcome to Skypy! {{ user }} </h1>
 	{% endif %}
 </html>
