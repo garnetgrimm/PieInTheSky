@@ -33,9 +33,27 @@ def getBadgeString(badges):
 	bstring = bstring[:-5]
 	bstring += ""
 	return bstring
+	
+
+def getPostString():
+	pstring = ""
+	for p in range(0, 2):
+		currPost = Post.query.filter_by(id="1").first()
+		pstring += currPost.img
+		pstring += "[BSPL]"
+		pstring += currPost.date
+		pstring += "[BSPL]"
+		pstring += currPost.desc
+		pstring += "[BSPL]"
+		pstring += currPost.comments
+		pstring += "{BSPL}"
+	pstring = pstring[:-6]
+	pstring += ""
+	return pstring
 
 class curr():
 	currentUser = ""
+	searchedUser = ""
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -71,7 +89,28 @@ class Badge(db.Model):
 		self.desc = desc
 	
 	def __repr__(self):
-		return '<Name %r>' % self.name		
+		return '<Name %r>' % self.name	
+
+class Post(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	#('3DPrinter.png', 'mm_dd_yyyy','I 3D printed something!!!', 'garnet: awesome![SPL]testuser41: cool');
+	#if no pic source given, dont try to add pic
+	
+	img = db.Column(db.String())
+	date = db.Column(db.String(30))
+	desc = db.Column(db.String())
+	comments = db.Column(db.String())
+	user = db.Column(db.String(80))
+	
+	def __init__(self, img, date, desc, comments, user):
+		self.img = img
+		self.date = date
+		self.desc = desc
+		self.comments = comments
+		self.user = user
+	
+	def __repr__(self):
+		return '<' + str(self.id) + '>'	
 		
 @app.route('/')
 def hello_world():
@@ -80,7 +119,7 @@ def hello_world():
 @app.route('/Badges', methods=['POST'])
 def badges():
 	user = User.query.filter_by(username=curr.currentUser).first()
-	badges = user.badges.split(",", 1)
+	badges = user.badges.split(",")
 	bstring = getBadgeString(badges)
 	return render_template('badges.html', user=user.username, badges=bstring)
 	
@@ -102,6 +141,11 @@ def home():
 	user = User.query.filter_by(username=curr.currentUser).first()
 	return render_template('home.html', user=user.username, admin=user.admin)
 
+@app.route("/News", methods=['POST'])
+def news():
+	print(getPostString())
+	return render_template('news.html')
+	
 @app.route("/searchUser", methods=['POST'])
 def search():
 	#search needs work for sure
@@ -110,6 +154,7 @@ def search():
 	user = User.query.filter_by(username=curr.currentUser).first()
 	
 	try:
+		curr.searchedUser = res.username
 		return render_template('home.html', user=user.username, admin=user.admin, searchres=res.username)
 	except:
 		return render_template('home.html', user=user.username, admin=user.admin)
@@ -125,17 +170,38 @@ def createBadge():
 	desc = desc.replace('\r', '')
 	desc = desc.replace('\n', '')
 	
-	print(desc)
-	
 	badge = Badge(name, pic, c1, c2, desc)
 	db.session.add(badge)
 	db.session.commit()
 	
 	return home()
 
-@app.route('/AwardUsers', methods=['POST'])
-def awardUsers():
+@app.route('/awardBadges', methods=['POST'])
+def awardBadges():
+	newBadges = request.form['selectedBadges']
+	u = User.query.filter_by(username=curr.searchedUser).first()
+	
+	newBadges = newBadges.split(",")
+	badges = ""
+	
+	for b in range(0, len(newBadges)):
+		newBadges[b] = int(newBadges[b]) + 1
+		badges += str(newBadges[b])
+		badges += ","
+	
+	badges = badges[:-1]
+	
+	print(badges)
+	
+	u.badges = badges
+	db.session.commit()
+	
+	return home()
+	
+@app.route('/getAllAwards', methods=['POST'])
+def getAllAwards():
 	user = User.query.filter_by(username=curr.currentUser).first() 
+	oldbadges = User.query.filter_by(username=curr.searchedUser).first().badges 
 	award = Badge.query.all()
 	
 	#error because of how bstring is stored
@@ -143,11 +209,9 @@ def awardUsers():
 	for i in range(0, len(award)):
 		bstring.append(i + 1)
 	
-	print(bstring)
-	
 	award = getBadgeString(bstring)
 	
-	return render_template('home.html', user=user.username, admin=user.admin, award=award)
+	return render_template('home.html', user=user.username, admin=user.admin, oldbadges=oldbadges, award=award)
 
 @app.route('/LogIn', methods=['POST'])
 def login():
@@ -187,7 +251,7 @@ def signUp():
 		return render_template('signUp.html', error=error)
 	
 	try:
-		user = User(username, password, "1:1:1:1:1:1:1", "1")
+		user = User(username, password, "1:1:1:1:1:1:1:50", "1")
 		#												  ^ seperate by commas, the id number of badges they have
 		db.session.add(user)
 		db.session.commit()

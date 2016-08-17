@@ -23,7 +23,7 @@
 
 <div id="allBadges" style="background-color: gray; display: inline;">
 	<div style="text-align: left;">
-	<input type="range" orient="vertical" id="slider" value="0"/>
+	<input type="range" orient="vertical" id="slider" value="100"/>
 	<canvas id="achieves" height=192 style="margin-left: 4px;"> </canvas>
 	</div>
 </div>
@@ -39,7 +39,9 @@ function badge(src, c1, c2, title, desc) {
 </script>
 
 <script>
-	var clickedBadges = [];
+	var clickedBadges = [{{ oldbadges }}];
+	
+	for(i = 0; i < clickedBadges.length; i++) clickedBadges[i]--;
 
 	var canvas = document.getElementById("achieves");
 	var context = canvas.getContext('2d');
@@ -81,6 +83,19 @@ function badge(src, c1, c2, title, desc) {
 	
 	drawBorder(ctx);
 	
+	var forRemoval = []
+
+	for(var i = 0; i < clickedBadges.length; i++) {
+		if(clickedBadges[i] < 0 || clickedBadges[i] > badges) forRemoval.append(i);
+	}
+	
+	for(var i = 0; i < forRemoval.length; i++) {
+		var index = clickedBadges.indexOf(clickedBadges[forRemoval[i]]);
+		if (index >= 0) {
+			  clickedBadges.splice(index, 1);
+		}
+	}	
+
 	lastSlider = slider;
 	
 	function createButton(ctx, src, color, backcolor, title, text) {		
@@ -158,21 +173,23 @@ function drawBorder(ctx) {
 		ctx.strokeRect(0, (clickedBadges[b] * 64) + slider, canvas.width, 64);
 	}
 	ctx.strokeStyle = "red";
-	if(borderY >= 0) ctx.strokeRect(0, (borderY * 64) + slider, canvas.width, 64);
+	if(borderY >= 0 && (borderY * 64) + slider < (allbadges.length * 64) + slider) ctx.strokeRect(0, (borderY * 64) + slider, canvas.width, 64);
 }
 
 function click(event) {
 	var b = currentBadge();
 	var found = false;
 	
-	for(var i = 0; i < clickedBadges.length; i++) {
-		if(clickedBadges[i] == b) found = true;
-	}
-	if(found == false) clickedBadges[clickedBadges.length] = b;
-	else {
-		var index = clickedBadges.indexOf(b);
-		if (index >= 0) {
-		  clickedBadges.splice( index, 1 );
+	if(b >= 0 && b <= badges) {
+		for(var i = 0; i < clickedBadges.length; i++) {
+			if(clickedBadges[i] == b) found = true;
+		}
+		if(found == false) clickedBadges[clickedBadges.length] = b;
+		else {
+			var index = clickedBadges.indexOf(b);
+			if (index >= 0) {
+			  clickedBadges.splice( index, 1 );
+			}
 		}
 	}
 }
@@ -190,12 +207,19 @@ function currentBadge() {
 document.addEventListener("click", click);
 
 updateClock(); // initial call
+
+function sendBadges() {
+	document.getElementById('selectedBadges').value = clickedBadges;
+	document.getElementById("selBadgesForm").submit();
+}
 </script>
 	
-<!-- 
-//make button show up, when pressed send a form with the selected badges
-<button onclick="sendBadges()"> Award! </button>
-<form> <input type="hidden"> </form>
- -->
-	
+
+<!-- //make button show up, when pressed send a form with the selected badges -->
+<button onclick="sendBadges()" style="margin-top: 215px;"> Award! </button>
+<form id="selBadgesForm" action="/awardBadges" method="Post"> 
+	<input type="hidden" id="selectedBadges" name="selectedBadges"> 
+	<input type="hidden" value={{ searchres }} name="badgeWinner">
+</form>
+ 
 </html>

@@ -1,0 +1,2 @@
+have the drawBorder function return a single rect object for border
+have a line of code to after everthing else is drawn to draw the rect

@@ -1,0 +1,114 @@
+<html style="text-align: center; background-color: gray;">
+
+	{% include 'homeback.html' %}
+	<br>
+	<br>
+
+	<style>
+	.NewsFrame {
+		margin: auto;
+		background-color: gray;
+		border: 2px solid black;
+		width: 300px;
+		text-align: center;
+	}
+	
+	img {
+		height: auto; 
+		width: auto; 
+		max-width: 300px; 
+		max-height: 300px;
+	}
+	
+	.comment {
+		color: #EEEEEE
+	}
+	
+	textarea {
+		width: 230px;
+		height: 35px;
+		resize: none;
+	}
+	button {
+		width: 50px;
+		height: 35px;
+		margin-left: 5px;
+		vertical-align:top;
+	}
+	</style>
+
+	<div id="news"/>
+	<script> 
+	function Post(src, date, desc, comments, user) {
+		this.src = src;
+		this.date = date;
+		this.desc = desc;
+		this.comments = comments;
+		this.user = user;
+	}
+	
+	var p = []
+	
+	p[p.length] = new Post("None", "4_20_2016", "Oh look, the library. Nice new and renovated the teen zone is inovative!", "testUser41: Wow that sure is neat im typing something super long now[SPL]testUser39: neat!", "Joe41");
+	p[p.length] = new Post("data:image/png;base64,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", "4_18_2016", "Just made a thing in the makerspace!", "", "BillyBob74");
+	
+	for(var i = 0; i < p.length; i++) {
+		var main = document.getElementById('news');
+		var frame = document.createElement('div');
+		frame.id = i;
+		frame.className = "NewsFrame";
+		if(p[i].src != "None") frame.appendChild(createPic(p[i].src));
+		frame.appendChild(createHead(p[i].user, p[i].desc));
+		frame.appendChild(createComment(p[i].comments));
+		frame.appendChild(createInput());
+		main.appendChild(frame);
+		main.appendChild(document.createElement('br'))
+	}
+	
+	function createInput() {
+		var poster = document.createElement('div');
+		var input = document.createElement('textarea');
+		var send = document.createElement('button');
+		var sendText = document.createTextNode('post');
+		
+		send.appendChild(sendText);
+		poster.appendChild(input);
+		poster.appendChild(send);
+		
+		poster.style = "height: 45px;"
+		
+		return poster;
+	}
+	
+	function createPic(src) {
+		var img = document.createElement('img');
+		img.src = src;
+		return img;
+	}
+	
+	function createHead(user, desc) {
+		var head = document.createElement('p');
+		var strong = document.createElement('strong');
+		var nameText = document.createTextNode(user);
+		var descText = document.createTextNode(": " + desc);
+		strong.appendChild(nameText);
+		head.appendChild(strong);
+		head.appendChild(descText);
+		return head;
+	}
+	
+	function createComment(comment) {
+		comment = comment.split("[SPL]");
+		var commentSect = document.createElement('div');
+		for(var i = 0; i < comment.length; i++) {
+			var commentText = document.createTextNode(comment[i]);
+			var comments = document.createElement('p');
+			comments.appendChild(commentText);
+			comments.className = "comment";
+			commentSect.appendChild(comments);
+		}
+		return commentSect;
+	}
+	
+	</script>
+</html>

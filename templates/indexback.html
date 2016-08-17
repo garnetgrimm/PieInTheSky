@@ -12,6 +12,7 @@
 		  background-color: #757575;
 		}
 		h1 {
+		  position: fixed;
 		  width: 100vw;
 		  margin-top: -10px;
 		  margin-left: -10px;
@@ -46,11 +47,11 @@
 		comp[0] = new component(1200, 800);
 		comp[1] = new component(1200, 900);
 		
-		for(var i = 0; i < comp.length - 1; i++) {
+		for(var i = 0; i < comp.length; i++) {
 			maxWidth += comp[i].width;
 		}
-
-		console.log(maxWidth);
+		
+		maxWidth -= screen.width;
 		
 		myGameArea.start();
 	}

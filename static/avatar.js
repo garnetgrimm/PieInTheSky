@@ -9,7 +9,6 @@ var y = 30;
 var hatY = 0;
 
 var currEyeColor = 0;
-//for this code to work, there needs to be the same number of all items
 
 function changeImgLeft(imgType, maxPart) {
 	currNum++;

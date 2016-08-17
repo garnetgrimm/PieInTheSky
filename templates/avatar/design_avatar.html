@@ -97,10 +97,45 @@ function updateAllParts(obj) {
 	obj.newPos();
 }
 
+var lastSlider = 0;
+
+function componentToHex(c) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+}
+
+function drawPupil() {
+	ctx = myGameArea.context;
+	slider = document.getElementById("eyeSlider").value;
+	
+	var colors = 100 / 3;
+	
+	var c = [0, 0, 0, 0, 0];
+	for(var i = 0; i < 5; i++) {
+		n = i + 1;
+		if(slider < colors * i) c[n] = slider - (colors * (i - 1));
+		if(slider >= colors * i) c[n] = (colors * (i + 1)) - slider;
+		if(c[n] <= 0) c[n] = 0;
+	}
+	
+	c[0] = c[1] + c[4];
+	
+	var r = Math.round((c[0] * 3) * 2.55);
+	var g = Math.round((c[2] * 3) * 2.55);
+	var b = Math.round((c[3] * 3) * 2.55);
+	
+    rgb = "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+	
+	ctx.fillStyle = rgb;
+	ctx.fillRect(121, 114, 5, 5);
+	ctx.fillRect(141, 114, 5, 5);
+}
+
 function updateGameArea() {
     myGameArea.clear();
     background.update();
     updateAllParts(head);
+	drawPupil();
 	updateAllParts(eye);
 	updateAllParts(mouth);
 	updateAllParts(facial_hair);
@@ -148,7 +183,7 @@ function recolorImage(oc, oldRed, oldGreen, oldBlue, newRed, newGreen, newBlue) 
 </body>
 <h2 style="position: absolute; top: 100px; left: calc((50vw - 135px) - 195px);"> <u>  Design Yourself!  <u> </h2>
 
-<div id="buttons" style="position: absolute; top: 145px; left: calc((50vw - 175px) - 150px);">
+<div id="buttons" style="position: absolute; top: 145px; left: calc((50vw - 175px) - 150px); text-align: left;">
 	<br>
 	head
 	<button onclick="changeImage('head', 'left')" ontouchstart="changeImage('head', 'left')"><</button>
@@ -183,10 +218,9 @@ function recolorImage(oc, oldRed, oldGreen, oldBlue, newRed, newGreen, newBlue) 
 	<button onclick="colorSkinRight()">></button>
 	<br>
 	eye color
-	<button onclick="recolorImage('charCreator', 0, 160, 160, 0, 0, 0);"><</button>
-	<button onclick="recolorImage('charCreator', 0, 160, 160, 0, 0, 0);">></button>
+	<input type="range" id="eyeSlider"> 
 	<br><br>
-	<button onclick="sendForm();" style="margin-left: -50px;"> SAVE </button>
+	<button onclick="sendForm();" style="margin-left: -5px;"> SAVE </button>
 </div>
 
 {% if currAvatar %}
@@ -202,6 +236,7 @@ function recolorImage(oc, oldRed, oldGreen, oldBlue, newRed, newGreen, newBlue) 
 			setImage('eyebrow', tokens[4]);
 			setImage('hair', tokens[5]);
 			setImage('facial_hair', tokens[6]);
+			document.getElementById("eyeSlider").value = tokens[7];
 		}
 		
 		function setImage(id, num) {
@@ -226,6 +261,7 @@ function sendForm() {
 	parts[4] = eyebrow.currObj;
 	parts[5] = hair.currObj;
 	parts[6] = facial_hair.currObj;
+	parts[7] = document.getElementById("eyeSlider").value;
 	
 	var avatarString = "";
 	
