@@ -1,2 +1,2 @@
-set FLASK_APP=hello.py
+set FLASK_APP=serverside.py
 flask run
