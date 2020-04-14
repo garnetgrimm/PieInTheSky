@@ -28,5 +28,5 @@ SQLAlchemy==1.1.15
 tornado==4.5.2
 tzlocal==1.5.1
 virtualenv==15.1.0
-Werkzeug==0.12.2
+Werkzeug==0.15.3
 youtube-dl==2017.9.15
